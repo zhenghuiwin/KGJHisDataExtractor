@@ -57,9 +57,21 @@ final class KGJHisDataExtractorTests: XCTestCase {
         XCTAssertFalse(ret2)
         
     }
+    
+    func testDataExtractorNewPath() {
+        let file = "/the/old/path/to/the/data/file"
+        let from = "/the/old/path/to/"
+        let to   = "/the/new/path/to/"
+        
+        let extor = DataExtractor()
+        let newPath = extor.newPath(for: file, from: from, to: to)
+        
+        XCTAssertEqual("/the/new/path/to/the/data/file", newPath)
+    }
 
     static var allTests = [
         ("testFirst", testFirst),
         ("testTimeUtilsIsInTimeRange", testTimeUtilsIsInTimeRange),
+        ("testDataExtractorNewPath", testDataExtractorNewPath),
     ]
 }
