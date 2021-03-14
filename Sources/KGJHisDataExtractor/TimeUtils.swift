@@ -187,7 +187,6 @@ public class TimeUtils {
         guard let aYear = targetTimes[String(year)],
               let aMonth = aYear[month],
               aMonth.contains(String(day)) else {
-            print("[ INFO ] Not matched.")
             return false
         }
         

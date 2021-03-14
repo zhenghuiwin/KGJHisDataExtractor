@@ -46,11 +46,10 @@ public class DataExtractor {
         print("--- 3")
         
         for case let e as URL in emtor {
-            print("[ INFO ] \(e)")
             guard let resValues = try? e.resourceValues(forKeys: resourceKeys),
                   let isDir = resValues.isDirectory,
                   let name = resValues.name else {
-                print("[ INFO ] Failed to get resourceValues of [\(e)vi ]")
+                print("[ INFO ] Failed to get resourceValues of [\(e)]")
                 continue
             }
             
@@ -60,7 +59,7 @@ public class DataExtractor {
                     continue
                 }
                 
-                print("[ INFO ] Targert file name: \(name)")
+                print("[ INFO ] [Matched file: \(name)]")
                 
                 let newFilePath = try copy(file: e, from: config.sharePath.source, to: config.sharePath.dist)
                 print("[ INFO ] [\(name)] has been copied to [\(newFilePath.path)]")
