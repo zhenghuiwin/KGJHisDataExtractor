@@ -24,8 +24,13 @@ public class DataExtractor {
         let resourceKeys = Set<URLResourceKey>([.nameKey, .isDirectoryKey])
         let fileMgr = FileManager.default
         
+        print("--- 1")
+        let soureUrl = URL(fileURLWithPath: config.sharePath.source)
+        print("soureURL: \(soureUrl)")
+        print("Exist: \(FileManager.default.fileExists(atPath: soureUrl.path))")
+        	
         guard let emtor = fileMgr.enumerator(
-                at: URL(fileURLWithPath: config.sharePath.source), // config.sharePath.source
+                at: soureUrl, // config.sharePath.source
                 includingPropertiesForKeys: nil,
                 options: .skipsHiddenFiles,
                 errorHandler: nil)
@@ -34,15 +39,21 @@ public class DataExtractor {
             return
         }
         
+        print("--- 2")
+        
         try timeUtils.buildTargetTimes()
         
+        print("--- 3")
+        
         for case let e as URL in emtor {
+            print("[ INFO ] \(e)")
             guard let resValues = try? e.resourceValues(forKeys: resourceKeys),
                   let isDir = resValues.isDirectory,
                   let name = resValues.name else {
-                print("[ INFO ] Failed to get resourceValues of [\(e)]")
+                print("[ INFO ] Failed to get resourceValues of [\(e)vi ]")
                 continue
             }
+            
             
             if !isDir {
                 guard timeUtils.isTargetFile(name: name) else {
