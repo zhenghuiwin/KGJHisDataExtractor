@@ -59,14 +59,15 @@ public class DataExtractor {
     
     private func copy(file: URL, from: String, to: String) throws -> URL {
         let newFilePath = newPath(for: file.path, from: from, to: to)
+        let newFilePathUrl = URL(fileURLWithPath: newFilePath)
         
         let fm = FileManager.default
         guard !fm.fileExists(atPath: newFilePath) else {
             print("[ INFO ] The [\(file.path)] has already existed in: [\(newFilePath)]")
-            return
+            return newFilePathUrl
         }
         
-        let newFilePathUrl = URL(fileURLWithPath: newFilePath)
+        
         let newDirForFile = newFilePathUrl.deletingLastPathComponent()
         try fm.createDirectory(at: newDirForFile, withIntermediateDirectories: true, attributes: nil)
         
