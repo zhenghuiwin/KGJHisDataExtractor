@@ -40,6 +40,7 @@ public class DataExtractor {
             guard let resValues = try? e.resourceValues(forKeys: resourceKeys),
                   let isDir = resValues.isDirectory,
                   let name = resValues.name else {
+                print("[ INFO ] Failed to get resourceValues of [\(e)]")
                 continue
             }
             
