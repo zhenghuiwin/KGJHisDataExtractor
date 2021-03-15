@@ -88,6 +88,8 @@ public class DataExtractor {
         var files: [URL] = []
         
         let allPath: [URL] = try fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: [.nameKey, .isDirectoryKey], options: .skipsHiddenFiles)
+        print("[ INFO ] [allPath count: \(allPath.count)]")
+        
         for path in allPath {
             guard let resValues = try? path.resourceValues(forKeys: [.nameKey, .isDirectoryKey]),
                   let isDir = resValues.isDirectory,
