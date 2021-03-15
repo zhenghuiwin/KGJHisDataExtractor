@@ -68,10 +68,31 @@ final class KGJHisDataExtractorTests: XCTestCase {
         
         XCTAssertEqual("/the/new/path/to/the/data/file", newPath)
     }
+    
+    func testDataExtractorAllFiles() throws {
+        let extor = DataExtractor()
+        let files: [URL] = try extor.allFiles(in: URL(fileURLWithPath: "/home/wksps/KGJHisDataExtractor/Tests"))
+        
+        XCTAssertEqual(4, files.count)
+        
+        let r = files.contains(URL(fileURLWithPath: "/home/wksps/KGJHisDataExtractor/Tests/LinuxMain.swift"))
+        XCTAssertTrue(r)
+        
+        let r1 = files.contains(URL(fileURLWithPath: "/home/wksps/KGJHisDataExtractor/Tests/KGJHisDataExtractorTests/KGJHisDataExtractorTests.swift"))
+        XCTAssertTrue(r1)
+        
+        let r2 = files.contains(URL(fileURLWithPath: "/home/wksps/KGJHisDataExtractor/Tests/KGJHisDataExtractorTests/XCTestManifests.swift"))
+        XCTAssertTrue(r2)
+        
+        let r3 = files.contains(URL(fileURLWithPath: "/home/wksps/KGJHisDataExtractor/Tests/test1/test2/testFile.txt"))
+        XCTAssertTrue(r3)
+        
+    }
 
     static var allTests = [
         ("testFirst", testFirst),
         ("testTimeUtilsIsInTimeRange", testTimeUtilsIsInTimeRange),
         ("testDataExtractorNewPath", testDataExtractorNewPath),
+        ("testDataExtractorAllFiles",testDataExtractorAllFiles),
     ]
 }

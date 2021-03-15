@@ -20,53 +20,87 @@ public class DataExtractor {
     
     public func extract() throws {
         let config = try Config.load(from: DataExtractor.configPath)
-        
-        let resourceKeys = Set<URLResourceKey>([.nameKey, .isDirectoryKey])
-        let fileMgr = FileManager.default
-        
-        print("--- 1")
         let soureUrl = URL(fileURLWithPath: config.sharePath.source)
-        print("soureURL: \(soureUrl)")
-        print("Exist: \(FileManager.default.fileExists(atPath: soureUrl.path))")
         	
-        guard let emtor = fileMgr.enumerator(
-                at: soureUrl, // config.sharePath.source
-                includingPropertiesForKeys: nil,
-                options: .skipsHiddenFiles,
-                errorHandler: nil)
-        else {
-            print("[ ERROR ]: emtor is nil")
-            return
-        }
+//        guard let emtor = fileMgr.enumerator(
+//                at: soureUrl, // config.sharePath.source
+//                includingPropertiesForKeys: nil,
+//                options: .skipsHiddenFiles,
+//                errorHandler: nil)
+//        else {
+//            print("[ ERROR ]: emtor is nil")
+//            return
+//        }
         
-        print("--- 2")
+       
         
         try timeUtils.buildTargetTimes()
         
-        print("--- 3")
+        let files: [URL] = try allFiles(in: soureUrl)
+        let total = Double(files.count)
+        var progress = 0.0
+        var sp = Array(repeating: " ", count: 100).joined(separator: "")
         
-        for case let e as URL in emtor {
-            guard let resValues = try? e.resourceValues(forKeys: resourceKeys),
+        for f in files {
+            guard timeUtils.isTargetFile(name: f.lastPathComponent) else { continue }
+            let newFilePath = try copy(file: f, from: config.sharePath.source, to: config.sharePath.dist)
+            
+            progress += 1
+            let percent = Int(progress / total * 100)
+            let progressBar = Array(repeating: "|", count: percent).joined(separator: "")
+            print("\r Progress: \(progressBar) \(sp) \(percent)%", terminator: " ")
+        }
+        
+//        for case let e as URL in emtor {
+//            guard let resValues = try? e.resourceValues(forKeys: resourceKeys),
+//                  let isDir = resValues.isDirectory,
+//                  let name = resValues.name else {
+//                print("[ INFO ] Failed to get resourceValues of [\(e)]")
+//                continue
+//            }
+//
+//
+//            if !isDir {
+//                guard timeUtils.isTargetFile(name: name) else {
+//                    continue
+//                }
+//
+//                print("[ INFO ] [Matched file: \(name)]")
+//
+//                let newFilePath = try copy(file: e, from: config.sharePath.source, to: config.sharePath.dist)
+//                print("[ INFO ] [\(name)] has been copied to [\(newFilePath.path)]")
+//
+//            }
+//        } // for case let e
+    } // func extract
+    
+    public func allFiles(in dir: URL) throws -> [URL] {
+        let fm = FileManager.default
+        guard fm.fileExists(atPath: dir.path) else {
+            throw DataExtractorError.directoryNotExist(msg: dir.path)
+        }
+    
+        var files: [URL] = []
+        
+        let allPath: [URL] = try fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: [.nameKey, .isDirectoryKey], options: .skipsHiddenFiles)
+        for path in allPath {
+            guard let resValues = try? path.resourceValues(forKeys: [.nameKey, .isDirectoryKey]),
                   let isDir = resValues.isDirectory,
                   let name = resValues.name else {
-                print("[ INFO ] Failed to get resourceValues of [\(e)]")
+                print("[ INFO ] Failed to get resourceValues of [\(path)]")
                 continue
             }
             
-            
-            if !isDir {
-                guard timeUtils.isTargetFile(name: name) else {
-                    continue
-                }
-                
-                print("[ INFO ] [Matched file: \(name)]")
-                
-                let newFilePath = try copy(file: e, from: config.sharePath.source, to: config.sharePath.dist)
-                print("[ INFO ] [\(name)] has been copied to [\(newFilePath.path)]")
-                
+            if isDir {
+                let subPath: [URL] = try! allFiles(in: path)
+                files.append(contentsOf: subPath)
+            } else {
+                files.append(path)
             }
-        } // for case let e
-    } // func extract
+        } // for path
+        
+        return files
+    } // func allFiles
     
     private func copy(file: URL, from: String, to: String) throws -> URL {
         let newFilePath = newPath(for: file.path, from: from, to: to)
