@@ -21,6 +21,8 @@ public class DataExtractor {
     public func extract() throws {
         let config = try Config.load(from: DataExtractor.configPath)
         let soureUrl = URL(fileURLWithPath: config.sharePath.source)
+        
+        print("[ INFO ] [soure: \(soureUrl.path)]")
         	
 //        guard let emtor = fileMgr.enumerator(
 //                at: soureUrl, // config.sharePath.source
@@ -37,6 +39,9 @@ public class DataExtractor {
         try timeUtils.buildTargetTimes()
         
         let files: [URL] = try allFiles(in: soureUrl)
+        
+        print("[ INFO ] [\(files.count)] found.")
+        
         let total = Double(files.count)
         var progress = 0.0
         var sp = Array(repeating: " ", count: 100).joined(separator: "")
