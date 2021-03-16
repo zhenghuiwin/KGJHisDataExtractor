@@ -54,7 +54,7 @@ public class DataExtractor {
             
             progress += 1
             let percent = Int(progress / total * 100)
-            print("prcent: \(percent), lastPercent: \(lastPercent), \(percent - lastPercent)")
+//            print("prcent: \(percent), lastPercent: \(lastPercent), \(percent - lastPercent)")
             if (percent - lastPercent) >= 1 {
                 lastPercent = percent
 //                let progressBar = Array(repeating: "|", count: percent).joined(separator: "")
@@ -112,6 +112,8 @@ public class DataExtractor {
                 files.append(path)
             }
         } // for path
+        
+        print("[\(Date())][\(allPath.count)]: preprocessing completed.[in func allFiles]")
         
         return files
     } // func allFiles
