@@ -44,7 +44,9 @@ public class DataExtractor {
         
         let total = Double(files.count)
         var progress = 0.0
-        var sp = Array(repeating: " ", count: 100).joined(separator: "")
+        let sp = Array(repeating: " ", count: 100).joined(separator: "")
+        var lastPercent = 0
+        var progressBar = "|"
         
         for f in files {
             guard timeUtils.isTargetFile(name: f.lastPathComponent) else { continue }
@@ -52,8 +54,12 @@ public class DataExtractor {
             
             progress += 1
             let percent = Int(progress / total * 100)
-            let progressBar = Array(repeating: "|", count: percent).joined(separator: "")
-            print("\r Progress: \(progressBar) \(sp) \(percent)%", terminator: " ")
+            if (percent - lastPercent) >= 1 {
+                lastPercent = percent
+//                let progressBar = Array(repeating: "|", count: percent).joined(separator: "")
+                progressBar += "|"
+                print("\r Progress: \(progressBar) \(sp) \(percent)%", terminator: " ")
+            }
         }
         
 //        for case let e as URL in emtor {
