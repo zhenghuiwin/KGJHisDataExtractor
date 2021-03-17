@@ -48,7 +48,7 @@ public class DataExtractor {
             guard timeUtils.isTargetFile(name: f.lastPathComponent) else { continue }
             let newFilePath = try copy(file: f, from: config.sharePath.source, to: config.sharePath.dist)
             
-            proBar.add(progress: 1, msg: "Copy")
+            proBar.add(progress: 1, msg: "[Copy]")
         }
         
 //        for case let e as URL in emtor {
@@ -101,7 +101,7 @@ public class DataExtractor {
                 files.append(contentsOf: subPath)
             } else {
                 files.append(path)
-                bar.add(progress: 1, msg: "预处理 \(dir.path)")
+                bar.add(progress: 1, msg: "[预处理 \(dir.path)]")
             }
         } // for path
         

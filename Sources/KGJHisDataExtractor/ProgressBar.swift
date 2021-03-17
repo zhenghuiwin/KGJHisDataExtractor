@@ -30,7 +30,7 @@ public class ProgressBar {
         
         if total.isLessThanOrEqualTo(self.progress) {
             progressBar = Array(repeating: "|", count: 100).joined()
-            print("\r\(msg):\(progressBar) \(100)%", terminator: " ")
+            print("\r\(msg):\(progressBar) \(100)%", terminator: "\n")
             return
         }
         
