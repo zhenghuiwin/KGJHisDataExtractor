@@ -45,10 +45,17 @@ public class DataExtractor {
         let proBar = ProgressBar(count: files.count)
 
         for f in files {
-            guard timeUtils.isTargetFile(name: f.lastPathComponent) else { continue }
-            let newFilePath = try copy(file: f, from: config.sharePath.source, to: config.sharePath.dist)
-            
             proBar.add(progress: 1, msg: "[Copy]")
+            guard timeUtils.isTargetFile(name: f.lastPathComponent) else {
+                continue
+            }
+            
+            do {
+                _ = try copy(file: f, from: config.sharePath.source, to: config.sharePath.dist)
+            } catch let e {
+                print("[ ERROR ] Copy [\(f)] failed: [\(e)]")
+                continue
+            }
         }
         
 //        for case let e as URL in emtor {
