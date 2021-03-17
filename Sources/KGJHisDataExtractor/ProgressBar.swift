@@ -15,12 +15,12 @@ public class ProgressBar {
     let sp = Array(repeating: " ", count: 100).joined(separator: "")
     var lastPercent: Int = 0
     var progressBar = ""
-    var delta: Int = 0
+    var delta = 0.0
     
     public init(count: Int) {
         total = Double(count)
-        delta = Int(total * 0.01)
-        print("delta: \(delta)")
+        delta = total * 0.01
+        print("[delta: \(delta), total: \(total)]")
     }
     
     public func add(progress: Int, msg: String = "") {
@@ -28,14 +28,19 @@ public class ProgressBar {
         
 //        print("Int(self.progress - lastProgress): \(Int(self.progress - lastProgress)), self.progress: \(self.progress), lastProgress: \(lastProgress)")
         
-        if Int(self.progress - lastProgress) >= delta {
-            lastProgress = self.progress
+        if total.isLessThanOrEqualTo(self.progress) {
+            progressBar = Array(repeating: "|", count: 100).joined()
+            print("\r\(msg):\(progressBar) \(100)%", terminator: " ")
+            return
+        }
+        
+        if delta.isLessThanOrEqualTo((self.progress - lastProgress)) {
             let percent = Int(self.progress / total * 100)
+//            print("\nprogress-lastProgress: \(self.progress - lastProgress), progress: \(self.progress), lastProgress: \(lastProgress), percent: \(percent)")
+            
             progressBar = Array(repeating: "|", count: percent).joined()
             print("\r\(msg):\(progressBar) \(percent)%", terminator: " ")
-//            Thread.sleep(forTimeInterval: 1)
+            lastProgress = self.progress
         }
-
-       
     }
 }

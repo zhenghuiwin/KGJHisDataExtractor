@@ -166,6 +166,16 @@ public class TimeUtils {
             return false
         }
         
+        let parts = file.split(separator: ".")
+        guard parts.count >= 2 else {
+            print("[ ERROR ] The file name format must be yyMMddhh.hhh")
+            return false
+        }
+        
+        guard parts[1] <= "060" else {
+            return false
+        }
+        
         let num = 6
         let s = file.startIndex
         let dataDateOfFile = file[s ..< file.index(s, offsetBy: num)]
