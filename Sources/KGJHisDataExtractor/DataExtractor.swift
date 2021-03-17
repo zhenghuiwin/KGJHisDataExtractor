@@ -40,17 +40,15 @@ public class DataExtractor {
         
         let files: [URL] = try allFiles(in: soureUrl)
         
-        print("[ INFO ] [\(files.count)] found.")
+        print("[ INFO ] [\r\(files.count)] 文件预处理结束.")
         
         let proBar = ProgressBar(count: files.count)
-        
-        var count = 0
+
         for f in files {
             guard timeUtils.isTargetFile(name: f.lastPathComponent) else { continue }
             let newFilePath = try copy(file: f, from: config.sharePath.source, to: config.sharePath.dist)
             
-            count += 1
-            proBar.add(progress: count, msg: "Copy")
+            proBar.add(progress: 1, msg: "Copy")
         }
         
 //        for case let e as URL in emtor {
@@ -103,7 +101,7 @@ public class DataExtractor {
                 files.append(contentsOf: subPath)
             } else {
                 files.append(path)
-                bar.add(progress: 1, msg: dir.path)
+                bar.add(progress: 1, msg: "预处理 \(dir.path)")
             }
         } // for path
         
