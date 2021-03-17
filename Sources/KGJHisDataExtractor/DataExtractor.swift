@@ -42,25 +42,15 @@ public class DataExtractor {
         
         print("[ INFO ] [\(files.count)] found.")
         
-        let total = Double(files.count)
-        var progress = 0.0
-        let sp = Array(repeating: " ", count: 100).joined(separator: "")
-        var lastPercent = 0
-        var progressBar = "|"
+        let proBar = ProgressBar(count: files.count)
         
+        var count = 0
         for f in files {
             guard timeUtils.isTargetFile(name: f.lastPathComponent) else { continue }
             let newFilePath = try copy(file: f, from: config.sharePath.source, to: config.sharePath.dist)
             
-            progress += 1
-            let percent = Int(progress / total * 100)
-//            print("prcent: \(percent), lastPercent: \(lastPercent), \(percent - lastPercent)")
-            if (percent - lastPercent) >= 1 {
-                lastPercent = percent
-//                let progressBar = Array(repeating: "|", count: percent).joined(separator: "")
-                progressBar += "|"
-                print("\r Progress: \(progressBar) \(sp) \(percent)%", terminator: " ")
-            }
+            count += 1
+            proBar.add(progress: count, msg: "Copy")
         }
         
 //        for case let e as URL in emtor {
@@ -94,13 +84,16 @@ public class DataExtractor {
     
         var files: [URL] = []
         
-        let allPath: [URL] = try fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: [.nameKey, .isDirectoryKey], options: .skipsHiddenFiles)
+        let allPath: [URL] = try fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles)
         print("[ INFO ] [allPath count: \(allPath.count)]")
         
+        let bar = ProgressBar(count: allPath.count)
+        
+        let sourceKey: Set<URLResourceKey> = [.isDirectoryKey]
+        
         for path in allPath {
-            guard let resValues = try? path.resourceValues(forKeys: [.nameKey, .isDirectoryKey]),
-                  let isDir = resValues.isDirectory,
-                  let name = resValues.name else {
+            guard let resValues = try? path.resourceValues(forKeys: sourceKey),
+                  let isDir = resValues.isDirectory else {
                 print("[ INFO ] Failed to get resourceValues of [\(path)]")
                 continue
             }
@@ -110,6 +103,7 @@ public class DataExtractor {
                 files.append(contentsOf: subPath)
             } else {
                 files.append(path)
+                bar.add(progress: 1, msg: dir.path)
             }
         } // for path
         

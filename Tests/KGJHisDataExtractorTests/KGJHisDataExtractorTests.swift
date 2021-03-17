@@ -88,6 +88,14 @@ final class KGJHisDataExtractorTests: XCTestCase {
         XCTAssertTrue(r3)
         
     }
+    
+    func testProgressBar() {
+        let progressBar = ProgressBar(count: 100)
+        for i in 1 ... 100 {
+            progressBar.add(progress: 1)
+        }
+        
+    }
 
     static var allTests = [
         ("testFirst", testFirst),
