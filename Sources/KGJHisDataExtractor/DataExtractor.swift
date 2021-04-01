@@ -22,7 +22,7 @@ public class DataExtractor {
         let config = try Config.load(from: DataExtractor.configPath)
         let soureUrl = URL(fileURLWithPath: config.sharePath.source)
         
-        print("[ INFO ] [soure: \(soureUrl.path)]")
+        print("[\(Date())][ INFO ] [soure: \(soureUrl.path)]")
         	
 //        guard let emtor = fileMgr.enumerator(
 //                at: soureUrl, // config.sharePath.source
@@ -53,7 +53,7 @@ public class DataExtractor {
             do {
                 _ = try copy(file: f, from: config.sharePath.source, to: config.sharePath.dist)
             } catch let e {
-                print("[ ERROR ] Copy [\(f)] failed: [\(e)]")
+                print("\n[\(Date())][ ERROR ] Copy [\(f)] failed: [\(e)]")
                 continue
             }
         }
@@ -90,7 +90,7 @@ public class DataExtractor {
         var files: [URL] = []
         
         let allPath: [URL] = try fm.contentsOfDirectory(at: dir, includingPropertiesForKeys: [.isDirectoryKey], options: .skipsHiddenFiles)
-        print("[ INFO ] [allPath count: \(allPath.count)]")
+        print("[\(Date())][ INFO ] [allPath count: \(allPath.count)]")
         
         let bar = ProgressBar(count: allPath.count)
         
@@ -99,7 +99,7 @@ public class DataExtractor {
         for path in allPath {
             guard let resValues = try? path.resourceValues(forKeys: sourceKey),
                   let isDir = resValues.isDirectory else {
-                print("[ INFO ] Failed to get resourceValues of [\(path)]")
+                print("\r[\(Date())][ INFO ] Failed to get resourceValues of [\(path)]")
                 continue
             }
             
@@ -112,7 +112,7 @@ public class DataExtractor {
             }
         } // for path
         
-        print("[\(Date())][\(allPath.count)]: preprocessing completed.[in func allFiles]")
+        print("\r[\(Date())][\(allPath.count)]: preprocessing completed.[in func allFiles]")
         
         return files
     } // func allFiles
@@ -123,7 +123,7 @@ public class DataExtractor {
         
         let fm = FileManager.default
         guard !fm.fileExists(atPath: newFilePath) else {
-            print("[ INFO ] The [\(file.path)] has already existed in: [\(newFilePath)]")
+            print("[\(Date())][ INFO ] The [\(file.path)] has already existed in: [\(newFilePath)]")
             return newFilePathUrl
         }
         

@@ -155,20 +155,20 @@ public class TimeUtils {
     /// - Returns: True: in; False not in
     public func isTargetFile(name: String) -> Bool {
         guard targetTimes.count > 0 else {
-            print("[ ERROR ] Should call buildTargetTimes() first!")
+            print("\n[\(Date())][ ERROR ] Should call buildTargetTimes() first!")
             return false
         }
         
         
         let file = name.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         guard file.count == 12 else {
-            print("[ ERROR ] The count of file must be 12, looks like: `18092608.000`.")
+            print("\n[\(Date())][ ERROR ] The count of file name [\(file)] character must be 12, looks like: `18092608.000`.")
             return false
         }
         
         let parts = file.split(separator: ".")
         guard parts.count >= 2 else {
-            print("[ ERROR ] The file name format must be yyMMddhh.hhh")
+            print("\n[\(Date())][ ERROR ] The file name [\(file)] format must be yyMMddhh.hhh")
             return false
         }
         
@@ -180,7 +180,7 @@ public class TimeUtils {
         let s = file.startIndex
         let dataDateOfFile = file[s ..< file.index(s, offsetBy: num)]
         guard let date = fmtFileName.date(from: String(dataDateOfFile)) else {
-            print("[ ERROR ] Failed to convert to date from the name of file: \(file).")
+            print("\n[\(Date())][ ERROR ] Failed to convert to date from the name of file: [\(file)].")
             return false
         }
         
@@ -189,7 +189,7 @@ public class TimeUtils {
         guard let year = comp.year,
               let month = comp.month,
               let day = comp.day else {
-            print("[ ERROR ] Failed to get the year, month, day from the date of the file name: \(file).")
+            print("\n[\(Date())][ ERROR ] Failed to get the year, month, day from the date of the file name: \(file).")
             return false
         }
         

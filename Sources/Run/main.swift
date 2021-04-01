@@ -18,7 +18,7 @@ let extor = DataExtractor()
 do {
 //    try timeUtils.buildTargetTimes()
     try extor.extract()
-    print("\n buildTargetTimes completed.")
+    print("\n [\(Date())] buildTargetTimes completed.")
 } catch let e {
-    print("[Error: \(e)]")
+    print("\n[\(Date())][Error: \(e)]")
 }
